@@ -35,5 +35,6 @@
 - (void)scrollViewWillEndDragging:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+- (void)scrollViewWillEndZooming:(UIScrollView *)scrollView;
 
 @end

@@ -71,21 +71,19 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-    
     return wPdfView;
-    
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
-    
+    [wPdfView scrollViewWillEndZooming:scrollView];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView
                        withView:(UIView *)view
                         atScale:(CGFloat)scale
 {
-   
+    [wPdfView scrollViewWillEndZooming:scrollView];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -97,14 +95,11 @@
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-
     [wPdfView scrollViewWillEndDragging:velocity targetContentOffset:targetContentOffset];
-       
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
@@ -114,9 +109,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-
     [wPdfView scrollViewDidScroll:scrollView];
-    
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -126,23 +119,17 @@
 
 - (void)setPath:(NSString *)path
 {
-    
     [wPdfView setPath:path];
-    
 }
 
 - (void)setPage:(int)page
 {
-    
     [wPdfView setPage:page];
-    
 }
 
 - (void)setScale:(float)scale
 {
-
     self.zoomScale = scale;
-
 }
 
 - (void)setHorizontal:(BOOL)horizontal

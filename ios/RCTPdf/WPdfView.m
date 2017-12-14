@@ -237,10 +237,7 @@
 
 - (void)noticePageChanged
 {
-    
     if(_onChange){
-        
-        
         if (_horizontal) {
             _pageOffset = ((((UIScrollView *)self.superview).contentOffset.x+((UIScrollView *)self.superview).bounds.size.width/2)/((UIScrollView *)self.superview).zoomScale-((UIScrollView *)self.superview).bounds.size.width/2)/(_pageCanvasSize.width+_spacing);
         } else {
@@ -302,7 +299,6 @@
     
     if (_pdfDoc != NULL) {
         
-        
         // PDF page drawing expects a Lower-Left coordinate system, so we flip the coordinate system before drawing.
         CGContextScaleCTM(context, 1.0, -1.0);
         
@@ -326,7 +322,6 @@
     bounds.origin.x = 0;
     bounds.origin.y = 0;
     
-    
     // caculate page canvas size
     _pageCanvasSize.width = self.superview.bounds.size.width;
     _pageCanvasSize.height = self.superview.bounds.size.height;
@@ -334,7 +329,6 @@
     if (_fitWidth ) {
         _pageCanvasSize.width = self.superview.bounds.size.width;
         _pageCanvasSize.height = _pdfPageRect.size.height*_pageCanvasSize.width/_pdfPageRect.size.width;
-        
     } else {
         if (_pageCanvasSize.height/_pageCanvasSize.width>_pdfPageRect.size.height/_pdfPageRect.size.width) {
             _pageCanvasSize.width = self.superview.bounds.size.width;
@@ -344,7 +338,6 @@
             _pageCanvasSize.height = self.superview.bounds.size.height;
         }
     }
-    
     
     // caculate bounds size
     if (_horizontal) {
@@ -359,7 +352,6 @@
         bounds.size.height = _pageCanvasSize.height*_numberOfBufferPages + _spacing*(_numberOfBufferPages-1);
     }
     
-    
     // adjust page canvas offset when can be drawn in one screen
     _pageCanvasOffset = CGPointZero;
     if (bounds.size.width<self.superview.bounds.size.width) {
@@ -371,7 +363,6 @@
         _pageCanvasOffset.y = (self.superview.bounds.size.height - bounds.size.height)/2;
         bounds.size.height = self.superview.bounds.size.height;
     }
-    
     
     // save zoomScale
     CGFloat zoomScale = ((UIScrollView *)self.superview).zoomScale;
@@ -456,15 +447,22 @@
     
     ((UIScrollView *)self.superview).contentOffset = contentOffset;
     ((UIScrollView *)self.superview).contentSize = self.bounds.size;
+
     [self setNeedsDisplay];
+}
+
+- (void)scrollViewWillEndZooming:(UIScrollView *)scrollView
+{
+    CGSize contentSize = ((UIScrollView *)scrollView).contentSize;
+    CGPoint contentOffset = ((UIScrollView *)scrollView).contentOffset;
+
+    _onChange(@{ @"message": [[NSString alloc] initWithString:[NSString stringWithFormat:@"endZoom|%f|%f|%f|%f", contentSize.width, contentSize.height, contentOffset.x, contentOffset.y]]});
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     if (_needFixPageOffset) {
-        
         [self fixPageOffset];
-        
     }
 }
 
@@ -475,59 +473,50 @@
     
     if (_horizontal) {
         if (velocity.x ==0) {
-            
             [self fixPageOffset];
-            
-        }else if (velocity.x < 0) {
-            
+        } else if (velocity.x < 0) {
             _isScrollToUpOrLeft = NO;
             _needFixPageOffset = YES;
             
             if (targetContentOffset->x <= 0 ) {
-                
             }
-            
         } else {
-            
             _isScrollToUpOrLeft = YES;
             _needFixPageOffset = YES;
             
             if (targetContentOffset->x >= contentSize.width - self.superview.bounds.size.width && _page<_numberOfPages - _numberOfBufferPages + 1) {
                 contentSize.width = targetContentOffset->x + 2*self.superview.bounds.size.width*((UIScrollView *)self.superview).zoomScale;
             }
-            
         }
     } else {
         if (velocity.y == 0) {
-            
             [self fixPageOffset];
-            
-        }else if (velocity.y < 0) {
-            
+        } else if (velocity.y < 0) {
             _isScrollToUpOrLeft = NO;
             _needFixPageOffset = YES;
             
             if (targetContentOffset->y <= 0 ) {
-                
             }
-            
         } else {
-            
             _isScrollToUpOrLeft = YES;
             _needFixPageOffset = YES;
             
             if (targetContentOffset->y >= contentSize.height - self.superview.bounds.size.height && _page<_numberOfPages - _numberOfBufferPages + 1) {
                 contentSize.height = targetContentOffset->y + 2*self.superview.bounds.size.height*((UIScrollView *)self.superview).zoomScale;
             }
-            
         }
     }
-    
+
     ((UIScrollView *)self.superview).contentSize = contentSize;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    CGSize contentSize = ((UIScrollView *)scrollView).contentSize;
+    CGPoint contentOffset = ((UIScrollView *)scrollView).contentOffset;
+
+    _onChange(@{ @"message": [[NSString alloc] initWithString:[NSString stringWithFormat:@"endScrolling|%f|%f|%f|%f", contentSize.width, contentSize.height, contentOffset.x, contentOffset.y]]});
+
     [self noticePageChanged];
 }
 

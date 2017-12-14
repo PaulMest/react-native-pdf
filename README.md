@@ -3,6 +3,10 @@
 
 A react native PDF view component (cross-platform support)
 
+### New features by Andrey Prihodko
+
+* onZoomEnd and onScroll events those return PDF image width, height, delta X and delta Y
+
 ### Feature
 
 * read a PDF from url/local file/asset and can cache it.

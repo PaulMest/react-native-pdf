@@ -27,8 +27,6 @@
 @property(nonatomic) int spacing;
 @property(nonatomic, strong) NSString *password;
 
-
 @property(nonatomic, copy) RCTBubblingEventBlock onChange;
-
 
 @end
