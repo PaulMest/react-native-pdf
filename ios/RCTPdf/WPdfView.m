@@ -507,6 +507,8 @@
         }
     }
 
+    _onChange(@{ @"message": [[NSString alloc] initWithString:[NSString stringWithFormat:@"endScrolling|%f|%f|%f|%f", contentSize.width, contentSize.height, targetContentOffset->x, targetContentOffset->y]]});
+
     ((UIScrollView *)self.superview).contentSize = contentSize;
 }
 
@@ -515,7 +517,7 @@
     CGSize contentSize = ((UIScrollView *)scrollView).contentSize;
     CGPoint contentOffset = ((UIScrollView *)scrollView).contentOffset;
 
-    _onChange(@{ @"message": [[NSString alloc] initWithString:[NSString stringWithFormat:@"endScrolling|%f|%f|%f|%f", contentSize.width, contentSize.height, contentOffset.x, contentOffset.y]]});
+    _onChange(@{ @"message": [[NSString alloc] initWithString:[NSString stringWithFormat:@"doScrolling|%f|%f|%f|%f", contentSize.width, contentSize.height, contentOffset.x, contentOffset.y]]});
 
     [self noticePageChanged];
 }
