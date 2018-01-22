@@ -199,7 +199,7 @@ export default class Pdf extends Component {
   _onChange = (event) => {
     const message = event.nativeEvent.message.split("|");
     const {
-      onLoadComplete, onPageChanged, onError, onScroll, onEndScroll, onZoomEnd,
+      onLoadComplete, onPageChanged, onError, onScroll, onScrollEnd, onZoomEnd,
     } = this.props;
 
     // __DEV__ && console.log("onChange: ", message[0]);
@@ -214,7 +214,7 @@ export default class Pdf extends Component {
       } else if (message[0] === "doScrolling") {
         onScroll && onScroll(this._parseLayoutProps(message))
       } else if (message[0] === "endScrolling") {
-        onScroll && onEndScroll(this._parseLayoutProps(message))
+        onScrollEnd && onScrollEnd(this._parseLayoutProps(message))
       } else if (message[0] === "endZoom") {
         onZoomEnd && onZoomEnd(this._parseLayoutProps(message))
       }
@@ -279,7 +279,7 @@ Pdf.propTypes = {
   onLoadComplete: PropTypes.func,
   onPageChanged: PropTypes.func,
   onScroll: PropTypes.func,
-  onEndScroll: PropTypes.func,
+  onScrollEnd: PropTypes.func,
   onZoomEnd: PropTypes.func,
   onError: PropTypes.func,
 };
