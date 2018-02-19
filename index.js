@@ -37,7 +37,7 @@ export default class Pdf extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.source != this.props.source) {
+    if (nextProps.source !== this.props.source) {
       //__DEV__ && console.log("componentWillReceiveProps: source changed");
       this._loadFromSource(nextProps.source)
     }
@@ -64,7 +64,7 @@ export default class Pdf extends Component {
     let uri = source.uri || "";
 
     // no chanage then return
-    if (this.uri == uri) return;
+    if (this.uri === uri) return;
     this.uri = uri;
 
     // first set to initial state

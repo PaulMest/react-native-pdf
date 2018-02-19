@@ -327,15 +327,13 @@
     _pageCanvasSize.height = self.superview.bounds.size.height;
     
     if (_fitWidth ) {
-        _pageCanvasSize.width = self.superview.bounds.size.width;
-        _pageCanvasSize.height = _pdfPageRect.size.height*_pageCanvasSize.width/_pdfPageRect.size.width;
+        // Disable this to make PDF to be displayed without scrollbars
+        // _pageCanvasSize.height = _pdfPageRect.size.height*_pageCanvasSize.width/_pdfPageRect.size.width;
     } else {
         if (_pageCanvasSize.height/_pageCanvasSize.width>_pdfPageRect.size.height/_pdfPageRect.size.width) {
-            _pageCanvasSize.width = self.superview.bounds.size.width;
             _pageCanvasSize.height = ceil(_pdfPageRect.size.height*self.superview.bounds.size.width/_pdfPageRect.size.width);
         } else {
             _pageCanvasSize.width = ceil(_pdfPageRect.size.width*self.superview.bounds.size.height/_pdfPageRect.size.height);
-            _pageCanvasSize.height = self.superview.bounds.size.height;
         }
     }
     
