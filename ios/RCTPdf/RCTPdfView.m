@@ -46,19 +46,17 @@
         self.bouncesZoom = NO;
         self.bounces = YES;
         self.delaysContentTouches = NO;
-        
+
         // fix statusbar effect when statusbar show/hide
         if (@available(iOS 11.0, *)) {
-            self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            // Fallback on earlier versions
+            self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAlways; // UIScrollViewContentInsetAdjustmentNever;
         }
 
         _needUpdateBounds = NO;
-        
+
         wPdfView = [[WPdfView alloc] initWithFrame:self.bounds];
         [self addSubview:wPdfView];
-        
+
         [self bindTap];
     }
     return self;
@@ -104,7 +102,7 @@
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
 {
-    
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -134,37 +132,37 @@
 
 - (void)setHorizontal:(BOOL)horizontal
 {
-    
+
     [wPdfView setHorizontal:horizontal];
-    
+
 }
 
 - (void)setFitWidth:(BOOL)fitWidth
 {
-    
+
     [wPdfView setFitWidth:fitWidth];
-    
+
 }
 
 - (void)setSpacing:(int)spacing
 {
-    
+
     [wPdfView setSpacing:spacing];
-    
+
 }
 
 - (void)setPassword:(NSString *)password
 {
-    
+
     [wPdfView setPassword:password];
-    
+
 }
 
 - (void)setOnChange:(RCTBubblingEventBlock)onChange
 {
-    
+
     [wPdfView setOnChange:onChange];
-    
+
 }
 
 - (void)layoutSubviews
@@ -180,25 +178,25 @@
 {
     long int count = [changedProps count];
     BOOL needLoadPdf = NO;
-    
+
     for (int i = 0 ; i < count; i++) {
         if ([[changedProps objectAtIndex:i] isEqualToString:@"path"]
             ||[[changedProps objectAtIndex:i] isEqualToString:@"password"]) {
             needLoadPdf = YES;
         }
-        
+
         if ([[changedProps objectAtIndex:i] isEqualToString:@"horizontal"]
             ||[[changedProps objectAtIndex:i] isEqualToString:@"fitWidth"]
             ||[[changedProps objectAtIndex:i] isEqualToString:@"spacing"]) {
             _needUpdateBounds = YES;
         }
     }
-    
+
     if (needLoadPdf) {
         [wPdfView loadPdf];
         _needUpdateBounds = YES;
     }
-    
+
     if (_needUpdateBounds) {
         [self setNeedsLayout];
     }
@@ -212,15 +210,15 @@
  */
 - (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer
 {
-    
+
     // one tap add scale 1.2 times
     CGFloat scale = self.zoomScale*1.2;
     if (scale>self.maximumZoomScale) scale = 1;
     self.zoomScale = scale;
     _fitWidth = NO;
-    
+
     [self setNeedsDisplay];
-    
+
 }
 
 /**
@@ -231,13 +229,13 @@
  */
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
-    
+
     if (self.zoomScale>1) {
         self.zoomScale = 1.0;
         _fitWidth = NO;
         [self setNeedsDisplay];
     }
-    
+
 }
 
 /**
@@ -252,17 +250,18 @@
     //trigger by one finger and double touch
     doubleTapRecognizer.numberOfTapsRequired = 2;
     doubleTapRecognizer.numberOfTouchesRequired = 1;
-    
+
     [self addGestureRecognizer:doubleTapRecognizer];
-    
+
     UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                           action:@selector(handleSingleTap:)];
     //trigger by one finger and one touch
     singleTapRecognizer.numberOfTapsRequired = 1;
     singleTapRecognizer.numberOfTouchesRequired = 1;
-    
+
     [self addGestureRecognizer:singleTapRecognizer];
     [singleTapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
-    
+
+    [self removeGestureRecognizer:self.pinchGestureRecognizer];
 }
 @end
