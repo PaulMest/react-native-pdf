@@ -416,6 +416,9 @@
 
 - (void)fixPageOffset
 {
+    // Disable this method as it breaks drag and drop
+    return;
+
     _needFixPageOffset = NO;
     
     CGPoint contentOffset = ((UIScrollView *)self.superview).contentOffset;
